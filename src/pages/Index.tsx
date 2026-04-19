@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, Shield, Heart, Star, CheckCircle } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, Heart, Star, CheckCircle, PhoneCall, CalendarCheck2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedSection from "@/components/AnimatedSection";
@@ -49,12 +49,12 @@ const Index = () => (
             <div className="flex flex-wrap gap-4">
               <Link to="/booking">
                 <Button size="lg" className="bg-gradient-gold text-primary-foreground rounded-full px-8 text-base hover:opacity-90 shadow-lg">
-                  Book Appointment <ArrowRight className="w-4 h-4 ml-1" />
+                  <CalendarCheck2 className="w-4 h-4 text-amber-100" /> Book Appointment <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </Link>
               <a href="tel:+911234567890">
-                <Button size="lg" variant="outline" className="rounded-full px-8 text-base border-gold text-gold-dark hover:bg-gold/5">
-                  Call Now
+                <Button size="lg" className="rounded-full px-8 text-base bg-gradient-call text-white hover:opacity-90 shadow-md shadow-call-start/30">
+                  <PhoneCall className="w-4 h-4 text-cyan-100" /> Call Now
                 </Button>
               </a>
             </div>
@@ -150,7 +150,7 @@ const Index = () => (
                 <CardContent className="p-6">
                   <div className="flex gap-1 mb-3">
                     {Array.from({ length: t.rating }).map((_, j) => (
-                      <Star key={j} className="w-4 h-4 fill-gold text-gold" />
+                      <Star key={j} className="w-4 h-4 fill-star text-star" />
                     ))}
                   </div>
                   <p className="text-foreground/80 leading-relaxed mb-4 italic">"{t.text}"</p>
@@ -249,10 +249,9 @@ const Index = () => (
               <a href="tel:+911234567890">
                 <Button
                   size="lg"
-                  variant="outline"
-                  className="rounded-full border-2 border-primary-foreground/50 bg-transparent px-10 text-primary-foreground shadow-none hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                  className="rounded-full bg-gradient-call px-10 text-white shadow-none hover:opacity-90"
                 >
-                  Call +91 123 456 7890
+                  <PhoneCall className="w-4 h-4 text-cyan-100" /> Call +91 123 456 7890
                 </Button>
               </a>
             </div>

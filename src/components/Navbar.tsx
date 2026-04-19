@@ -55,8 +55,8 @@ const Navbar = () => {
             </Link>
           ))}
           <a href="tel:+911234567890">
-            <Button size="sm" className="bg-gradient-gold text-primary-foreground hover:opacity-90 gap-2 rounded-full px-5">
-              <Phone className="w-4 h-4" /> Call Now
+            <Button size="sm" className="bg-gradient-call text-white hover:opacity-90 gap-2 rounded-full px-5 shadow-md shadow-call-start/30">
+              <Phone className="w-4 h-4 text-cyan-100" /> Call Now
             </Button>
           </a>
         </div>
@@ -92,8 +92,8 @@ const Navbar = () => {
                 </Link>
               ))}
               <a href="tel:+911234567890">
-                <Button className="bg-gradient-gold text-primary-foreground w-full rounded-full gap-2">
-                  <Phone className="w-4 h-4" /> Call Now
+                <Button className="bg-gradient-call text-white w-full rounded-full gap-2 shadow-md shadow-call-start/30">
+                  <Phone className="w-4 h-4 text-cyan-100" /> Call Now
                 </Button>
               </a>
             </div>

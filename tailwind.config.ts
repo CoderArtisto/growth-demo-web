@@ -15,8 +15,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Open Sans", "system-ui", "sans-serif"],
-        serif: ["Montserrat", "system-ui", "sans-serif"],
+        sans: ["Playfair Display", "Georgia", "serif"],
+        serif: ["Playfair Display", "Georgia", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -31,6 +31,13 @@ export default {
         },
         cream: "hsl(var(--cream))",
         "warm-grey": "hsl(var(--warm-grey))",
+        call: {
+          start: "hsl(var(--call-start))",
+          end: "hsl(var(--call-end))",
+        },
+        star: {
+          DEFAULT: "hsl(var(--star-gold))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
