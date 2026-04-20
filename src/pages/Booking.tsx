@@ -47,9 +47,16 @@ const Booking = () => {
     }
   }, [searchParams]);
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only allow digits and limit to 10 characters
+    const digitsOnly = value.replace(/\D/g, "").slice(0, 10);
+    setPhone(digitsOnly);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (date && time && name && phone && service) {
+    if (date && time && name && phone && service && phone.length === 10) {
       setConfirmed(true);
     }
   };
@@ -148,7 +155,18 @@ const Booking = () => {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-base font-medium">Phone Number</Label>
-                  <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 98765 43210" className="h-12 rounded-xl" required />
+                  <Input
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    placeholder="9876543210"
+                    className="h-12 rounded-xl"
+                    required
+                    maxLength={10}
+                    inputMode="numeric"
+                    pattern="[0-9]{10}"
+                    title="Please enter exactly 10 digits"
+                  />
+                  <p className="text-xs text-muted-foreground">Enter 10 digit mobile number</p>
                 </div>
               </div>
 

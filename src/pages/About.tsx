@@ -3,6 +3,7 @@ import { ArrowRight, Award, Heart, Microscope, ShieldCheck, Stethoscope, Users }
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedSection from "@/components/AnimatedSection";
+import { motion } from "framer-motion";
 
 const values = [
   { icon: Heart, title: "Patient-First Care", desc: "Every decision we make starts with your comfort and well-being." },
@@ -12,11 +13,11 @@ const values = [
 ];
 
 const qualifications = [
-  "BDS – Maulana Azad Institute of Dental Sciences, Delhi",
-  "MDS (Prosthodontics) – All India Institute of Medical Sciences",
-  "Advanced Certification in Cosmetic Dentistry, USA",
-  "Member – Indian Dental Association",
-  "Fellow – International Congress of Oral Implantologists",
+  { year: "2012", title: "BDS", desc: "Maulana Azad Institute of Dental Sciences, Delhi" },
+  { year: "2015", title: "MDS (Prosthodontics)", desc: "All India Institute of Medical Sciences" },
+  { year: "2017", title: "Advanced Cosmetic Dentistry", desc: "Certification from USA" },
+  { year: "2018", title: "Indian Dental Association", desc: "Lifetime Member" },
+  { year: "2020", title: "ICOI Fellow", desc: "International Congress of Oral Implantologists" },
 ];
 
 const About = () => (
@@ -128,15 +129,46 @@ const About = () => (
               </div>
             </div>
 
-            <h3 className="font-serif text-xl font-semibold mb-4 text-foreground">Qualifications</h3>
-            <ul className="space-y-3">
-              {qualifications.map((q) => (
-                <li key={q} className="flex items-start gap-3 text-sm text-muted-foreground">
-                  <Award className="w-4 h-4 text-gold mt-0.5 shrink-0" />
-                  {q}
-                </li>
-              ))}
-            </ul>
+            <h3 className="font-serif text-xl font-semibold mb-6 text-foreground">Qualifications & Milestones</h3>
+            <div className="relative">
+              {/* Timeline line */}
+              <div className="absolute left-[19px] top-2 bottom-2 w-0.5 bg-gradient-to-b from-gold/30 via-gold/50 to-gold/30" />
+
+              <div className="space-y-6">
+                {qualifications.map((q, index) => (
+                  <motion.div
+                    key={q.year}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="relative flex items-start gap-4"
+                  >
+                    {/* Timeline dot */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
+                      className="relative z-10 w-10 h-10 rounded-full bg-gold/10 border-2 border-gold flex items-center justify-center shrink-0"
+                    >
+                      <Award className="w-4 h-4 text-gold" />
+                    </motion.div>
+
+                    {/* Content */}
+                    <div className="flex-1 pt-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-semibold text-gold bg-gold/10 px-2 py-0.5 rounded">
+                          {q.year}
+                        </span>
+                        <span className="font-medium text-foreground">{q.title}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{q.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </AnimatedSection>
         </div>
       </div>

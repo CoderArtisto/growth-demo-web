@@ -54,7 +54,7 @@ const Index = () => (
               </Link>
               <a href="tel:+911234567890">
                 <Button size="lg" className="rounded-full px-8 text-base bg-gradient-call text-white hover:opacity-90 shadow-md shadow-call-start/30">
-                  <PhoneCall className="w-4 h-4 text-cyan-100" /> Call Now
+                  <PhoneCall className="w-4 h-4 text-red-400" /> Call Now
                 </Button>
               </a>
             </div>
@@ -251,7 +251,7 @@ const Index = () => (
                   size="lg"
                   className="rounded-full bg-gradient-call px-10 text-white shadow-none hover:opacity-90"
                 >
-                  <PhoneCall className="w-4 h-4 text-cyan-100" /> Call +91 123 456 7890
+                  <PhoneCall className="w-4 h-4 text-red-400" /> Call +91 123 456 7890
                 </Button>
               </a>
             </div>

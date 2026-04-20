@@ -23,15 +23,27 @@ const contactInfo = [
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [phone, setPhone] = useState("");
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only allow digits and limit to 10 characters
+    const digitsOnly = value.replace(/\D/g, "").slice(0, 10);
+    setPhone(digitsOnly);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
     const fullName = String(data.get("fullName") ?? "").trim();
-    const phone = String(data.get("phone") ?? "").trim();
     const email = String(data.get("email") ?? "").trim();
     const message = String(data.get("message") ?? "").trim();
+
+    if (phone.length !== 10) {
+      toast.error("Please enter a valid 10-digit phone number");
+      return;
+    }
 
     const subject = encodeURIComponent(`IvoryEdge contact: ${fullName || "Website visitor"}`);
     const body = encodeURIComponent(
@@ -140,11 +152,18 @@ const Contact = () => {
                       <Input
                         id="contact-phone"
                         name="phone"
-                        placeholder="+91 98765 43210"
+                        value={phone}
+                        onChange={handlePhoneChange}
+                        placeholder="9876543210"
                         className="h-12 rounded-xl"
                         required
                         autoComplete="tel"
+                        maxLength={10}
+                        inputMode="numeric"
+                        pattern="[0-9]{10}"
+                        title="Please enter exactly 10 digits"
                       />
+                      <p className="text-xs text-muted-foreground">Enter 10 digit mobile number</p>
                     </div>
                   </div>
                   <div className="space-y-2">

@@ -10,7 +10,7 @@ const FloatingCallButton = () => (
     className="fixed bottom-6 left-6 z-40 w-14 h-14 rounded-full bg-gradient-call text-white shadow-lg shadow-call-start/35 flex items-center justify-center hover:scale-110 transition-transform"
     aria-label="Call Now"
   >
-    <Phone className="w-6 h-6 text-cyan-100" />
+    <Phone className="w-6 h-6 text-red-400" />
   </motion.a>
 );
 
