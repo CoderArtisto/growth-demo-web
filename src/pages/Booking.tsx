@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
-import { CalendarIcon, CheckCircle, Clock } from "lucide-react";
+import { CalendarIcon, CheckCircle, Clock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import AnimatedSection from "@/components/AnimatedSection";
+import { sendBookingEmail } from "@/lib/emailjs";
+import { toast } from "sonner";
 
 const timeSlots = [
   "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -37,6 +39,7 @@ const Booking = () => {
   const [phone, setPhone] = useState("");
   const [service, setService] = useState("");
   const [confirmed, setConfirmed] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     const param = searchParams.get("service");
@@ -54,10 +57,26 @@ const Booking = () => {
     setPhone(digitsOnly);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (date && time && name && phone && service && phone.length === 10) {
-      setConfirmed(true);
+      setIsSending(true);
+      try {
+        await sendBookingEmail({
+          name,
+          phone,
+          service,
+          date: format(date, "PPP"),
+          time,
+        });
+        toast.success("Appointment request sent to the doctor!");
+        setConfirmed(true);
+      } catch (error) {
+        toast.error("Failed to send appointment request. Please try again or call directly.");
+        console.error("EmailJS Error:", error);
+      } finally {
+        setIsSending(false);
+      }
     }
   };
 
@@ -174,9 +193,15 @@ const Booking = () => {
                 type="submit"
                 size="lg"
                 className="w-full bg-gradient-gold text-primary-foreground rounded-full text-base hover:opacity-90 h-14"
-                disabled={!date || !time || !name || !phone || !service}
+                disabled={!date || !time || !name || !phone || !service || isSending}
               >
-                Confirm Appointment
+                {isSending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending...
+                  </>
+                ) : (
+                  "Confirm Appointment"
+                )}
               </Button>
             </form>
           </AnimatedSection>

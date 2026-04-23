@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedSection from "@/components/AnimatedSection";
 import { toast } from "sonner";
+import { sendContactEmail } from "@/lib/emailjs";
 
 const CONTACT_EMAIL = "student29gopal@gmail.com";
 
@@ -24,6 +25,12 @@ const contactInfo = [
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
   const [phone, setPhone] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    message: "",
+  });
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -32,27 +39,35 @@ const Contact = () => {
     setPhone(digitsOnly);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const fullName = String(data.get("fullName") ?? "").trim();
-    const email = String(data.get("email") ?? "").trim();
-    const message = String(data.get("message") ?? "").trim();
 
     if (phone.length !== 10) {
       toast.error("Please enter a valid 10-digit phone number");
       return;
     }
 
-    const subject = encodeURIComponent(`IvoryEdge contact: ${fullName || "Website visitor"}`);
-    const body = encodeURIComponent(
-      [`Name: ${fullName}`, `Phone: ${phone}`, `Email: ${email}`, "", "Message:", message].join("\n"),
-    );
-
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
-    toast.success("Opening your email app — send the message to complete.");
+    setIsSending(true);
+    try {
+      await sendContactEmail({
+        name: formData.fullName,
+        phone,
+        email: formData.email,
+        message: formData.message,
+      });
+      toast.success("Message sent to the doctor successfully!");
+      setSubmitted(true);
+    } catch (error) {
+      toast.error("Failed to send message. Please try again or call directly.");
+      console.error("EmailJS Error:", error);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -141,6 +156,8 @@ const Contact = () => {
                       <Input
                         id="contact-fullName"
                         name="fullName"
+                        value={formData.fullName}
+                        onChange={handleInputChange}
                         placeholder="Your name"
                         className="h-12 rounded-xl"
                         required
@@ -172,6 +189,8 @@ const Contact = () => {
                       id="contact-email"
                       name="email"
                       type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
                       placeholder="you@example.com"
                       className="h-12 rounded-xl"
                       required
@@ -183,13 +202,23 @@ const Contact = () => {
                     <Textarea
                       id="contact-message"
                       name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
                       placeholder="How can we help you?"
                       className="min-h-[120px] rounded-xl"
                       required
                     />
                   </div>
-                  <Button type="submit" size="lg" className="w-full bg-gradient-gold text-primary-foreground rounded-full text-base hover:opacity-90 h-14">
-                    <Send className="w-4 h-4 mr-2" /> Send Message
+                  <Button type="submit" size="lg" disabled={isSending} className="w-full bg-gradient-gold text-primary-foreground rounded-full text-base hover:opacity-90 h-14">
+                    {isSending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2" /> Send Message
+                      </>
+                    )}
                   </Button>
                 </form>
               )}
